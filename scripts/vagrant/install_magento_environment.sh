@@ -35,11 +35,11 @@ rm -rf /etc/php/5.6/apache2
 ln -s /etc/php/5.6/cli /etc/php/5.6/apache2
 
 # Install PHP 7.0 and enable it by default
-apt-get install -y php7.0 php7.0-mcrypt php7.0-curl php7.0-cli php7.0-mysql php7.0-gd php7.0-intl php7.0-xsl php7.0-bcmath php7.0-mbstring php7.0-soap php7.0-zip libapache2-mod-php7.0
-a2enmod php7.0
+apt-get install -y php7.2 php7.2-curl php7.2-cli php7.2-mysql php7.2-gd php7.2-intl php7.2-xsl php7.2-bcmath php7.2-mbstring php7.2-soap php7.2-zip libapache2-mod-php7.2
+a2enmod php7.2
 
 # Install XDebug
-apt-get install -y php7.0-dev
+apt-get install -y php7.2-dev
 cd /usr/lib
 git clone git://github.com/xdebug/xdebug.git
 cd xdebug
@@ -48,17 +48,17 @@ phpize
 make
 make install
 ## Configure XDebug to allow remote connections from the host
-touch /etc/php/7.0/cli/conf.d/20-xdebug.ini
+touch /etc/php/7.2/cli/conf.d/20-xdebug.ini
 echo 'zend_extension=/usr/lib/xdebug/modules/xdebug.so
 xdebug.max_nesting_level=200
 xdebug.remote_enable=1
 xdebug.remote_host=192.168.10.1
-xdebug.idekey=phpstorm' >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
-echo "date.timezone = America/Chicago" >> /etc/php/7.0/cli/php.ini
-rm -rf /etc/php/7.0/apache2
-ln -s /etc/php/7.0/cli /etc/php/7.0/apache2
+xdebug.idekey=phpstorm' >> /etc/php/7.2/cli/conf.d/20-xdebug.ini
+echo "date.timezone = America/Chicago" >> /etc/php/7.2/cli/php.ini
+rm -rf /etc/php/7.2/apache2
+ln -s /etc/php/7.2/cli /etc/php/7.2/apache2
 
-update-alternatives --set php /usr/bin/php7.0
+update-alternatives --set php /usr/bin/php7.2
 
 # Restart Apache
 service apache2 restart
@@ -66,7 +66,7 @@ service apache2 restart
 # Setup MySQL
 debconf-set-selections <<< 'mysql-server mysql-server/root_password password password'
 debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password password'
-apt-get install -q -y mysql-server-5.6 mysql-client-5.6
+apt-get install -q -y mysql-server-5.7 mysql-client-5.7
 mysqladmin -uroot -ppassword password ''
 # Make it possible to run 'mysql' without username and password
 sed -i '/\[client\]/a \
@@ -90,7 +90,7 @@ invoke-rc.d rabbitmq-server start
 apt-get install -y varnish
 
 # Install ElasticSearch
-apt-get install -y openjdk-7-jre
+apt-get install -y openjdk-8-jre
 wget https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-1.7.2.deb
 dpkg -i elasticsearch-1.7.2.deb
 update-rc.d elasticsearch defaults
